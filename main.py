@@ -1,10 +1,25 @@
 from fastapi import FastAPI
 from typing import Optional
-from packages import web_activity
-from packages import worker_activity
-from packages import machines
+from app.routes import activity, infrastructure, marketing
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
+
+origins = ['http://localhost:8000', 'metadata.surveydatahub.com', 'dev-app.surveydatahub.com', 'http://localhost']
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.include_router(activity.router, prefix="/activity")
+app.include_router(marketing.router, prefix="/marketing")
+app.include_router(infrastructure.router, prefix="/infra")
+
+
 
 @app.get("/")
 def read_root():
@@ -12,22 +27,7 @@ def read_root():
 
 
 
-@app.get("/machines/{machine_id}")
-def get_item(machine_id: int):
-    if machine_id:
-        return machines.Machine(machine_id=machine_id)
-    return machine_id
-
-@app.post("/web_activity")
-async def web_event(event: web_activity.WebActivity):
-    insert = event.insert_record()
-    result = {"status": insert, "payload": event.dict()}
-    return result
 
 
-@app.post("/worker_activity")
-async def worker_event(event: worker_activity.WorkerActivity):
-    insert = event.insert_record()
-    payload = event.dict()
-    result = {"status": insert, "payload":payload}
-    return result
+
+
