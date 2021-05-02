@@ -14,9 +14,11 @@ from mailchimp_marketing.api_client import ApiClientError
 load_dotenv()
 
 class Prospect(BaseModel):
-    email_address: str = None
+    email: str = None
     name: str = None
     company: str = None
+    title: str = None
+    company_size: str = None
 
 
 def add_member_to_mailing_list():
@@ -40,22 +42,22 @@ def add_member_to_mailing_list_chimp(email:str, list_id:str):
         return (-1, error.text)
 
 
-def add_member_to_linkedin(self, body):
-    cmd = f"""insert into prospects.linkedin_users (name, company, company_size, 
+def add_member_to_linkedin(body):
+    cmd = f"""insert into prospects.linkedin_users (name, company,
             title, outreach_step) values (
-            {body['name']},
-            {body['company']},
-            {body['company_size']},
-            {body['title']},
-            "not contacted"
+            '{body['name']}',
+            '{body['company']}',
+            '{body['title']}',
+            'not contacted'
             )"""
-    conn = psycopg2.connect(self._connection_string())
+    conn = psycopg2.connect(connection_string())
     cursor = conn.cursor()
     cursor.execute(cmd)
     conn.commit()
     cursor.close()
     conn.close()
     return 0
+
 
 
 def add_member_to_mailing_list_db(email):
