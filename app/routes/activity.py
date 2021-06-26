@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.models import web_activity, worker_activity
+from app.models import web_activity, worker_activity, event
 
 router = APIRouter()
 
@@ -14,5 +14,12 @@ async def web_event(event: web_activity.WebActivity):
 async def worker_event(event: worker_activity.WorkerActivity):
     insert = event.insert_record()
     payload = event.dict()
+    result = {"status": insert, "payload": payload}
+    return result
+
+@router.post("/event")
+async def event_activity(event_x: event.EventActivity):
+    insert = event_x.insert_record()
+    payload = event_x.dict()
     result = {"status": insert, "payload": payload}
     return result

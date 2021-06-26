@@ -17,7 +17,7 @@ async def prospect(event: mktg_subscription.Prospect):
                 "name": event.name,
                 "title": event.title,
                 "company": event.company,
-                "company_size": event.company_size
+                "list_name": event.list_name
                 }
         mktg_subscription.add_member_to_linkedin(body=body)
         return (0,body)

@@ -19,6 +19,7 @@ class Prospect(BaseModel):
     company: str = None
     title: str = None
     company_size: str = None
+    list_name: str = None
 
 
 def add_member_to_mailing_list():
@@ -44,11 +45,12 @@ def add_member_to_mailing_list_chimp(email:str, list_id:str):
 
 def add_member_to_linkedin(body):
     cmd = f"""insert into prospects.linkedin_users (name, company,
-            title, outreach_step) values (
+            title, outreach_step, list_name) values (
             '{body['name']}',
             '{body['company']}',
             '{body['title']}',
-            'not contacted'
+            'not contacted',
+            '{body['list_name']}'
             )"""
     conn = psycopg2.connect(connection_string())
     cursor = conn.cursor()

@@ -4,29 +4,32 @@ import logging
 from dotenv import load_dotenv
 from pydantic import  BaseModel
 from traceback import format_exc
+from datetime import datetime
 load_dotenv()
 
-class WorkerActivity(BaseModel):
-    worker_id:int
-    status:str
-    activity:str
-    event_message:str
+class EventActivity(BaseModel):
+    event_name: str
+    event_status: str
+    event_message: str
+    machine_id: int
 
 
     def insert_record(self):
         try:
             conn = psycopg2.connect(self._connection_string())
             cursor = conn.cursor()
-            cmd = f"""insert into worker_activty.events (
-                        worker_id,
-                        status,
-                        activity,
-                        event_message
+            cmd = f"""insert into activity.events (
+                        event_name,
+                        event_status,
+                        event_timestamp,
+                        event_message,
+                        machine_id
                         ) values (
-                        {self.worker_id},
-                        {self.status},
-                        {self.activity},
-                        {self.event_message}
+                        '{self.event_name}',
+                        '{self.event_status}',
+                        '{datetime.utcnow()}',
+                        '{self.event_message}',
+                        {self.machine_id}
                         )               
                         """
             cursor.execute(cmd)

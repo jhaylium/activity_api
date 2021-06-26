@@ -8,7 +8,7 @@ app = FastAPI()
 
 origins = ['http://localhost:8000', 'metadata.surveydatahub.com',
            'dev-app.surveydatahub.com', 'http://localhost', 'app.surveydatahub.com',
-           'surveydatahub.com', '*.surveydatahub.com']
+           'surveydatahub.com', '*.surveydatahub.com', 'http://127.0.0.1:8000']
 
 app.add_middleware(
     CORSMiddleware,
